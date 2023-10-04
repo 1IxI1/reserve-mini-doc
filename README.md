@@ -43,6 +43,10 @@ with real examples) of using this tool.
 
 Here is a description of the modes for `raw_reserve(x, mode)`.
 
+> "sending a message" here means the contract balance is decreased in
+> the way it decreases when sending a message. But no any real message is sent.
+> It affects only the other actions (usually actions with send mode 128).
+
 -   `reserve::this_amount = 0` - Equivalent of sending a message with x TONs.
 -   `reserve::leave_this_amount = 1` - Equivalent of sending a message with almost whole balance but leaving x TONs, and if not enough - throw error.
 -   `reserve::at_most_this_amount = 2` - Equivalent of sending a message with x TONs, and if not enough - don't throw error. but (!) if you will try to send something from it - will throw..
