@@ -1,0 +1,41 @@
+#include "imports/stdlib.fc";
+
+() recv_internal(cell in_msg_full, slice in_msg_body) impure {
+    if (slice_empty?(in_msg_body)) {
+        return ();
+    }
+
+    slice cs = in_msg_full.begin_parse();
+    int flags = cs~load_uint(4);
+
+    slice sender_address = cs~load_msg_addr();
+
+    slice ds = in_msg_body;
+    int reserve_mode_1 = ds~load_uint(8);
+    int to_reserve_1 = ds~load_grams();
+
+    ;; putting reserve_mode_2 to 255 will disable the second reserve
+    int reserve_mode_2 = ds~load_uint(8);
+    int to_reserve_2 = ds~load_grams();
+
+    int send_mode = ds~load_uint(8);
+    int to_send = ds~load_grams();
+
+    raw_reserve(to_reserve_1, reserve_mode_1);
+    if (reserve_mode_2 != 255) {
+        raw_reserve(to_reserve_2, reserve_mode_2);
+    } else {
+        raw_reserve(0, 0); ;; just to eqalize gas usage
+    }
+
+    cell msg = begin_cell()
+        .store_uint(0x18, 6)
+        .store_slice(sender_address)
+        .store_coins(to_send)
+        .store_uint(0, 1 + 4 + 4 + 64 + 32 + 1 + 1)
+       .end_cell();
+
+    if (send_mode != 255) {
+        send_raw_message(msg, send_mode);
+    }
+}
