@@ -22,8 +22,11 @@ export abstract class Reserve {
     // equivalent of leaving on contract (balance before msg - x) TONs and sending a message with the rest
     static readonly leave_bbalance_minus_this_amount = 13;
 
-    // 4->6, 5->7, 8->10, 9->11, 12->14, 13->15 - adding 2 to this modes just
-    // disable errors in action codes if balance is not enough
+    // But there are more avaliable modes to pass:
+    // 4 -> 6, 5 -> 7, 8 -> 10, 9 -> 11, 12 -> 14, 13 -> 15
+    //
+    //     adding 2 to them will just disable errors
+    //     in action phase if balance is not enough
 
     // DONT WORK:
     // adding to balance x TONs
@@ -32,7 +35,7 @@ export abstract class Reserve {
     static readonly add_balance_minus_this_amount = 9;
 }
 
-describe('Toy', () => {
+describe('RAWRESERVE Probes', () => {
     let code: Cell;
 
     let blockchain: Blockchain;
